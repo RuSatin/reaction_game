@@ -23,7 +23,7 @@
 
 1. Клонируйте репозиторий:
 ```bash
-git clone https://github.com/yourusername/reaction_game.git
+git clone https://github.com/RuSatin/reaction_game.git
 cd reaction_game
 ```
 
