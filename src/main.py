@@ -4,17 +4,17 @@
 import tkinter as tk
 import json
 from typing import Dict, Any
-from components.menu import Menu
-from components.game_field import GameField
-from utils.settings import WINDOW_WIDTH, WINDOW_HEIGHT
+from src.components.menu import Menu
+from src.components.game_field import GameField
+from src.utils.settings import WINDOW
 
 
 class ReactionTrainer:
     def __init__(self):
         """Инициализация приложения"""
         self.root = tk.Tk()
-        self.root.title("Тренировка реакции")
-        self.root.geometry(f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}")
+        self.root.title(WINDOW["title"])
+        self.root.geometry(f"{WINDOW['width']}x{WINDOW['height']}")
         self.root.resizable(False, False)
 
         # Настройки игры
@@ -130,4 +130,4 @@ if __name__ == "__main__":
         print(f"Error occurred: {e}")
         print("Full traceback:")
         print(traceback.format_exc())
-        input("Press Enter to exit...") 
+        input("Press Enter to exit...")

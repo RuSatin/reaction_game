@@ -2,43 +2,76 @@
 Модуль с настройками игры
 """
 
-# Настройки анимации
-ANIMATION_SPEED = 10  # мс между кадрами
-ANIMATION_STEPS = 10  # количество кадров
-
 # Настройки окна
-WINDOW_WIDTH = 1000
-WINDOW_HEIGHT = 800
+WINDOW = {
+    "title": "Тренировка реакции",
+    "width": 800,
+    "height": 600
+}
 
 # Настройки игры
-SHAPE_SIZE = 100
-MAX_FLASH_RADIUS = 50
-FLASH_RINGS = 5
-
-# Очки за сложность
-DIFFICULTY_POINTS = {
-    "easy": 1000,
-    "medium": 1200,
-    "hard": 1500
+GAME = {
+    "shape_size": 50,
+    "spawn_delay": {
+        "easy": 2000,
+        "medium": 1500,
+        "hard": 1000
+    },
+    "points": {
+        "min": 10,
+        "max": 100
+    }
 }
 
-# Задержки для разных уровней сложности (в мс)
-DELAYS = {
-    "easy": (1500, 3000),  # 1.5-3 секунды
-    "medium": (1000, 2000),  # 1-2 секунды
-    "hard": (500, 1500)  # 0.5-1.5 секунды
+# Настройки анимации
+ANIMATION = {
+    "speed": 20,
+    "steps": 10,
+    "flash_radius": 50,
+    "flash_rings": 3
 }
 
-# Названия режимов
-MODE_NAMES = {
-    "color": "Цвет",
-    "shape": "Фигура",
-    "sound": "Звук"
+# Настройки прогрессии
+PROGRESSION = {
+    # Очки для перехода на следующий уровень
+    "difficulty_thresholds": {
+        "easy": 5000,     # После 5000 очков -> medium
+        "medium": 10000,  # После 10000 очков -> hard
+    },
+    
+    # Очки для добавления режимов
+    "mode_thresholds": {
+        "color": 0,       # Доступен сразу
+        "shape": 7000,    # После 7000 очков
+        "sound": 15000    # После 15000 очков
+    },
+    
+    # Порядок режимов и сложности
+    "mode_order": ["color", "shape", "sound"],
+    "difficulty_order": ["easy", "medium", "hard"],
+    
+    # Шанс смены режима (0-1)
+    "mode_change_chance": 0.3
 }
 
-# Названия уровней сложности
-DIFFICULTY_NAMES = {
-    "easy": "Легкий",
-    "medium": "Средний",
-    "hard": "Сложный"
-} 
+# Локализация
+LOCALIZATION = {
+    "modes": {
+        "color": "Цвета",
+        "shape": "Фигуры",
+        "sound": "Звуки"
+    },
+    "difficulties": {
+        "easy": "Легкий",
+        "medium": "Средний",
+        "hard": "Сложный"
+    },
+    "buttons": {
+        "menu": "Меню",
+        "start": "Начать",
+        "continue": "Продолжить",
+        "settings": "Настройки"
+    },
+    "score": "Счет",
+    "best_score": "Рекорд"
+}

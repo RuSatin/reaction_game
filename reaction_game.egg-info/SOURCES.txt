@@ -1,0 +1,16 @@
+README.md
+setup.py
+reaction_game.egg-info/PKG-INFO
+reaction_game.egg-info/SOURCES.txt
+reaction_game.egg-info/dependency_links.txt
+reaction_game.egg-info/requires.txt
+reaction_game.egg-info/top_level.txt
+src/__init__.py
+src/main.py
+src/components/__init__.py
+src/components/game_field.py
+src/components/menu.py
+src/utils/__init__.py
+src/utils/animations.py
+src/utils/colors.py
+src/utils/settings.py

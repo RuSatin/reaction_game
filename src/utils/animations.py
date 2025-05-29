@@ -2,8 +2,8 @@
 Модуль с утилитами для анимаций
 """
 import tkinter as tk
-from typing import List, Tuple, Callable
-from .settings import ANIMATION_SPEED, ANIMATION_STEPS, MAX_FLASH_RADIUS, FLASH_RINGS
+from typing import List, Callable, Optional
+from src.utils.settings import ANIMATION
 
 
 def create_gradient(canvas: tk.Canvas, color1: str, color2: str) -> None:
@@ -30,18 +30,25 @@ def create_gradient(canvas: tk.Canvas, color1: str, color2: str) -> None:
 
 def animate_shape(canvas: tk.Canvas, shape_id: int, 
                  start_scale: float = 0.1, end_scale: float = 1.0,
-                 on_complete: Callable = None) -> None:
-    """Анимация появления фигуры"""
+                 on_complete: Optional[Callable] = None) -> str:
+    """
+    Анимация появления фигуры
+    
+    :return: ID анимации
+    """
     coords = canvas.coords(shape_id)
     if not coords:
-        return
+        return ""
         
     # Находим центр фигуры
     center_x = sum(coords[::2]) / len(coords[::2])
     center_y = sum(coords[1::2]) / len(coords[1::2])
     
     def animate_step(step: int) -> None:
-        scale = start_scale + (end_scale - start_scale) * (step / ANIMATION_STEPS)
+        if not canvas.winfo_exists():
+            return
+            
+        scale = start_scale + (end_scale - start_scale) * (step / ANIMATION["steps"])
         
         # Масштабируем координаты относительно центра
         new_coords = []
@@ -52,20 +59,26 @@ def animate_shape(canvas: tk.Canvas, shape_id: int,
             
         canvas.coords(shape_id, *new_coords)
         
-        if step < ANIMATION_STEPS:
-            canvas.after(ANIMATION_SPEED, lambda: animate_step(step + 1))
+        if step < ANIMATION["steps"]:
+            return canvas.after(ANIMATION["speed"], lambda: animate_step(step + 1))
         elif on_complete:
             on_complete()
+            return ""
     
-    animate_step(0)
+    return animate_step(0) or ""
 
 
-def create_flash_effect(canvas: tk.Canvas, x: int, y: int, color: str) -> None:
-    """Создает эффект вспышки при клике"""
+def create_flash_effect(canvas: tk.Canvas, x: int, y: int, color: str) -> List[str]:
+    """
+    Создает эффект вспышки при клике
+    
+    :return: Список ID анимаций
+    """
+    animation_ids = []
     rings = []
     
-    for i in range(FLASH_RINGS):
-        radius = MAX_FLASH_RADIUS * (1 - i/FLASH_RINGS)
+    for i in range(ANIMATION["flash_rings"]):
+        radius = ANIMATION["flash_radius"] * (1 - i/ANIMATION["flash_rings"])
         ring = canvas.create_oval(
             x - radius, y - radius,
             x + radius, y + radius,
@@ -75,35 +88,53 @@ def create_flash_effect(canvas: tk.Canvas, x: int, y: int, color: str) -> None:
         )
         rings.append(ring)
     
-    def fade_step(step: int, rings: List[int]) -> None:
+    def fade_step(step: int, rings: List[int]) -> Optional[str]:
+        if not canvas.winfo_exists():
+            return None
+            
         if step >= 10 or not rings:
             for ring in rings:
                 canvas.delete(ring)
-            return
+            return None
         
         # Изменяем размер колец
         for i, ring in enumerate(rings):
-            radius = MAX_FLASH_RADIUS * (1 - i/FLASH_RINGS) * (1 + step/10)
+            radius = ANIMATION["flash_radius"] * (1 - i/ANIMATION["flash_rings"]) * (1 + step/10)
             canvas.coords(
                 ring,
                 x - radius, y - radius,
                 x + radius, y + radius
             )
         
-        canvas.after(20, lambda: fade_step(step + 1, rings))
+        return canvas.after(20, lambda: fade_step(step + 1, rings))
     
-    fade_step(0, rings)
+    animation_id = fade_step(0, rings)
+    if animation_id:
+        animation_ids.append(animation_id)
+    
+    return animation_ids
 
 
 def animate_text(canvas: tk.Canvas, text_id: int, center_x: int, center_y: int,
-                start_scale: float = 0.1, end_scale: float = 1.0) -> None:
-    """Анимация появления текста"""
+                start_scale: float = 0.1, end_scale: float = 1.0,
+                on_complete: Optional[Callable] = None) -> str:
+    """
+    Анимация появления текста
+    
+    :return: ID анимации
+    """
     canvas.scale(text_id, center_x, center_y, start_scale, start_scale)
     
-    def animate_step(step: int) -> None:
+    def animate_step(step: int) -> Optional[str]:
+        if not canvas.winfo_exists():
+            return None
+            
         if step <= 10:
             scale = start_scale + (end_scale - start_scale) * (step / 10)
             canvas.scale(text_id, center_x, center_y, scale, scale)
-            canvas.after(20, lambda: animate_step(step + 1))
+            return canvas.after(ANIMATION["speed"], lambda: animate_step(step + 1))
+        elif on_complete:
+            on_complete()
+            return None
     
-    animate_step(0) 
+    return animate_step(0) or ""

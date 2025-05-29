@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: reaction_game
+Version: 0.1
+Requires-Dist: tkinter
+Dynamic: requires-dist

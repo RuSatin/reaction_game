@@ -4,8 +4,8 @@
 import tkinter as tk
 from tkinter import messagebox
 from typing import Callable, Dict
-from ..utils.colors import COLORS
-from ..utils.settings import MODE_NAMES, DIFFICULTY_NAMES
+from src.utils.colors import COLORS
+from src.utils.settings import WINDOW, LOCALIZATION
 
 
 class Menu:
@@ -27,7 +27,7 @@ class Menu:
         # Заголовок
         title_label = tk.Label(
             self.frame,
-            text="Тренировка реакции",
+            text=WINDOW["title"],
             font=("Helvetica", 24, "bold"),
             bg=COLORS['bg'],
             fg=COLORS['text']
@@ -118,13 +118,14 @@ class Menu:
         # Создаем фреймы для режимов и сложности
         modes_frame = Menu._create_radio_group(
             mode_window, "Режим игры", mode_var,
-            [("Цвет", "color"), ("Фигура", "shape"), ("Звук", "sound")]
+            [(LOCALIZATION["modes"][mode], mode) for mode in ["color", "shape", "sound"]]
         )
         modes_frame.pack(padx=20, pady=10, fill="x")
 
         difficulty_frame = Menu._create_radio_group(
             mode_window, "Уровень сложности", difficulty_var,
-            [("Легкий", "easy"), ("Средний", "medium"), ("Сложный", "hard")]
+            [(LOCALIZATION["difficulties"][diff], diff) 
+             for diff in ["easy", "medium", "hard"]]
         )
         difficulty_frame.pack(padx=20, pady=20, fill="x")
 
@@ -219,4 +220,4 @@ class Menu:
         - 'Продолжить' - вернуться к текущей игре
         - 'Меню' - вернуться в главное меню
         """
-        messagebox.showinfo("Инструкция", instructions) 
+        messagebox.showinfo("Инструкция", instructions)
