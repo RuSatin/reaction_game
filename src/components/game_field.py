@@ -253,7 +253,7 @@ class GameField:
         )
         
         self.score_text = self.canvas.create_text(
-            WINDOW["width"] - 100,
+            self.canvas.winfo_width() - 10,
             30,
             text=score_text,
             font=("Helvetica", 14),
@@ -266,7 +266,7 @@ class GameField:
         anim_id = animate_text(
             self.canvas,
             self.score_text,
-            WINDOW["width"] - 100,
+            self.canvas.winfo_width() - 10,
             30
         )
         if anim_id:

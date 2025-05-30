@@ -14,14 +14,15 @@ class ReactionTrainer:
         """Инициализация приложения"""
         self.root = tk.Tk()
         self.root.title(WINDOW["title"])
-        self.root.geometry(f"{WINDOW['width']}x{WINDOW['height']}")
-        self.root.resizable(False, False)
+        # Устанавливаем полноэкранный режим
+        self.root.attributes('-fullscreen', True)
+        # Добавляем обработчик клавиши Escape
+        self.root.bind('<Escape>', lambda e: self.root.quit())
 
         # Настройки игры
         self.game_mode = "color"
         self.difficulty = "medium"
         self.best_score = 0
-        self.first_run = True
 
         # Загрузка настроек
         self.load_settings()
@@ -39,12 +40,6 @@ class ReactionTrainer:
         # Показать меню при запуске
         self.show_menu()
 
-        # Показать инструкцию при первом запуске
-        if self.first_run:
-            Menu.show_instructions()
-            self.first_run = False
-            self.save_settings()
-
     def load_settings(self) -> None:
         """Загружает настройки из файла"""
         try:
@@ -53,7 +48,6 @@ class ReactionTrainer:
                 self.best_score = data.get('best_score', 0)
                 self.game_mode = data.get('game_mode', "color")
                 self.difficulty = data.get('difficulty', "medium")
-                self.first_run = data.get('first_run', True)
         except (FileNotFoundError, json.JSONDecodeError):
             pass
 
@@ -64,8 +58,7 @@ class ReactionTrainer:
             json.dump({
                 'best_score': max(scores['best_score'], self.best_score),
                 'game_mode': self.game_mode,
-                'difficulty': self.difficulty,
-                'first_run': self.first_run
+                'difficulty': self.difficulty
             }, f)
 
     def show_menu(self) -> None:
